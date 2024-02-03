@@ -1,0 +1,6 @@
+{
+    "name": "sequence-analyzer",
+    "dependencies": {
+        "result": "latest"
+    }
+}
