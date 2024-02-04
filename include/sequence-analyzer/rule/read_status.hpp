@@ -2,7 +2,7 @@
 #define ASUKA1975_SEQUENCE_ANALYZER_RULE_READ_STATUS_HPP
 
 namespace asuka1975 {
-    enum ReadStatus {
+    enum class ReadStatus {
         Continue,
         CompleteAccept,
         CompleteIgnore,
