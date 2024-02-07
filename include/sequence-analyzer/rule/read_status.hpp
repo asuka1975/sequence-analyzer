@@ -4,8 +4,7 @@
 namespace asuka1975 {
     enum class ReadStatus {
         Continue,
-        CompleteAccept,
-        CompleteIgnore,
+        Complete,
         Reject,
     };
 }

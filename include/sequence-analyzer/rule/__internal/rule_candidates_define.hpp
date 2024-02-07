@@ -1,5 +1,7 @@
-#ifndef ASUKA1975_SEQUENCE_ANALYZER_RULE___INTERNAL_RULE_CANDIDATES_HPP
-#define ASUKA1975_SEQUENCE_ANALYZER_RULE___INTERNAL_RULE_CANDIDATES_HPP
+#ifndef ASUKA1975_SEQUENCE_ANALYZER_RULE___INTERNAL_RULE_CANDIDATES_DEFINE_HPP
+#define ASUKA1975_SEQUENCE_ANALYZER_RULE___INTERNAL_RULE_CANDIDATES_DEFINE_HPP
+
+#include "../rule_candidates_declare.hpp"
 
 #include <algorithm>
 
@@ -14,6 +16,9 @@ namespace asuka1975 {
 
     template <class TItem, class TOutput, class TError, class TRulePointer>
     inline ReadStatus RuleCandidates<TItem, TOutput, TError, TRulePointer>::read(const TItem& item) {
+        for(auto& candidate : candidates) {
+            candidate->read(item);
+        }
     }
 
     template <class TItem, class TOutput, class TError, class TRulePointer>
