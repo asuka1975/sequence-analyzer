@@ -11,10 +11,12 @@
 namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     struct Rule {
+        virtual ~Rule() = default;
         virtual ReadStatus read(const TItem& item) = 0;
         virtual Result<TError, TOutput> create() const = 0;
         virtual TError getError() const noexcept = 0;
         virtual std::size_t getSeekBackCount() const noexcept = 0;
+        virtual void reset() = 0;
     };
 }
 

@@ -2,6 +2,7 @@
 #define ASUKA1975_SEQUENCE_ANALYZER_RULE_RULE_SEQUENCE_DECLARE_HPP
 
 #include <cstddef>
+#include <list>
 #include <memory>
 
 #include "result/result.hpp"
@@ -19,9 +20,12 @@ namespace asuka1975 {
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
         std::size_t getSeekBackCount() const noexcept override;
+        void reset() override;
     private:
         std::unique_ptr<Rule<TItem, TOutput, TError>> rule;
         std::unique_ptr<SequenceBuilder<TOutput, TError>> builder;
+        std::list<TItem> history;
+        std::size_t unreadedOnCompleted;
     };
 }
 

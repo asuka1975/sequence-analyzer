@@ -2,6 +2,7 @@
 #define ASUKA1975_SEQUENCE_ANALYZER_RULE_RULE_CANDIDATES_DECLARE_HPP
 
 #include <list>
+#include <memory>
 #include <ranges>
 #include <utility>
 
@@ -17,6 +18,7 @@ namespace asuka1975 {
         ReadStatus read(const TItem& item) override;
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
+        void reset() override;
     private:
         std::list<TRulePointer> candidates;
         std::vector<bool> finished;
