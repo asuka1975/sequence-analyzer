@@ -5,6 +5,7 @@
 namespace asuka1975 {
     template <class TOutput, class TError>
     struct SequenceBuilder {
+        virtual ~SequenceBuilder() = default;
         virtual void add(TOutput output) = 0;
         virtual Result<TError, TOutput> builder() = 0;
         virtual bool ready() const noexcept = 0;
