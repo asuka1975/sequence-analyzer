@@ -9,6 +9,9 @@
 
 struct SimpleRule_0SeekBack : public virtual asuka1975::Rule<char, char, Error> {
     asuka1975::ReadStatus read(const char& item) override {
+        if(memory == 'a') {
+            return asuka1975::ReadStatus::Reject;
+        }
         memory = item;
         if(item == 'a') {
             return asuka1975::ReadStatus::Complete;
