@@ -3,22 +3,24 @@
 
 #include "../rule_candidates_declare.hpp"
 #include "sequence-analyzer/rule/read_status.hpp"
+#include "sequence-analyzer/rule/rule.hpp"
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 
 namespace asuka1975 {
-    template <class TItem, class TOutput, class TError, class TRulePointer>
+    template <class TItem, class TOutput, class TError>
     template <std::ranges::input_range TCandidates>
-        requires std::same_as<std::ranges::range_value_t<TCandidates>, TRulePointer> && std::same_as<decltype(*std::declval<TRulePointer>()), TItem>
-    inline RuleCandidates<TItem, TOutput, TError, TRulePointer>::RuleCandidates(TCandidates candidates) : candidates(std::ranges::size(candidates)), finishOrder(std::ranges::size(candidates)) {
+        requires std::same_as<std::ranges::range_value_t<TCandidates>, std::unique_ptr<Rule<TItem, TOutput, TError>>>
+    inline RuleCandidates<TItem, TOutput, TError>::RuleCandidates(TCandidates candidates) : candidates(std::ranges::size(candidates)), finishOrder(std::ranges::size(candidates)) {
         std::ranges::move(candidates, this->candidates);
     }
 
 
-    template <class TItem, class TOutput, class TError, class TRulePointer>
-    inline ReadStatus RuleCandidates<TItem, TOutput, TError, TRulePointer>::read(const TItem& item) {
+    template <class TItem, class TOutput, class TError>
+    inline ReadStatus RuleCandidates<TItem, TOutput, TError>::read(const TItem& item) {
         std::size_t i = 0;
         for(auto& candidate : candidates) {
             if(finishOrder[i] != 0) {
@@ -38,23 +40,23 @@ namespace asuka1975 {
         seekBackCount++;
     }
 
-    template <class TItem, class TOutput, class TError, class TRulePointer>
-    inline Result<TError, TOutput> RuleCandidates<TItem, TOutput, TError, TRulePointer>::create() const {
+    template <class TItem, class TOutput, class TError>
+    inline Result<TError, TOutput> RuleCandidates<TItem, TOutput, TError>::create() const {
         return (*pickupRule())->create();
     }
 
-    template <class TItem, class TOutput, class TError, class TRulePointer>
-    inline TError RuleCandidates<TItem, TOutput, TError, TRulePointer>::getError() const noexcept {
+    template <class TItem, class TOutput, class TError>
+    inline TError RuleCandidates<TItem, TOutput, TError>::getError() const noexcept {
         return (*pickupRule())->getError();
     }
 
-    template <class TItem, class TOutput, class TError, class TRulePointer>
-    inline std::size_t RuleCandidates<TItem, TOutput, TError, TRulePointer>::getSeekBackCount() const noexcept {
+    template <class TItem, class TOutput, class TError>
+    inline std::size_t RuleCandidates<TItem, TOutput, TError>::getSeekBackCount() const noexcept {
         return (*pickupRule())->getSeekBackCount() + seekBackCount;
     }
 
-    template <class TItem, class TOutput, class TError, class TRulePointer>
-    inline void RuleCandidates<TItem, TOutput, TError, TRulePointer>::reset() {
+    template <class TItem, class TOutput, class TError>
+    inline void RuleCandidates<TItem, TOutput, TError>::reset() {
         for(auto& candidate : candidates) {
             candidate->reset();
         }
@@ -64,8 +66,8 @@ namespace asuka1975 {
         seekBackCount = 0;
     }
 
-    template <class TItem, class TOutput, class TError, class TRulePointer>
-    inline typename std::list<TRulePointer>::const_iterator RuleCandidates<TItem, TOutput, TError, TRulePointer>::pickupRule() const {
+    template <class TItem, class TOutput, class TError>
+    inline typename std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>>::const_iterator RuleCandidates<TItem, TOutput, TError>::pickupRule() const {
         auto iter = std::ranges::max_element(finishOrder);
         auto index = std::distance(finishOrder.begin(), iter);
         return std::next(candidates.begin(), index);

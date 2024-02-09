@@ -11,11 +11,11 @@
 #include "sequence-analyzer/rule/rule.hpp"
 
 namespace asuka1975 {
-    template <class TItem, class TOutput, class TError, class TRulePointer>
+    template <class TItem, class TOutput, class TError>
     class RuleCandidates : public virtual Rule<TItem, TOutput, TError> {
     public:
         template <std::ranges::input_range TCandidates>
-            requires std::same_as<std::ranges::range_value_t<TCandidates>, TRulePointer> && std::same_as<decltype(*std::declval<TRulePointer>()), TItem>
+            requires std::same_as<std::ranges::range_value_t<TCandidates>, std::unique_ptr<Rule<TItem, TOutput, TError>>>
         RuleCandidates(TCandidates candidates);
         ReadStatus read(const TItem& item) override;
         Result<TError, TOutput> create() const override;
@@ -23,9 +23,9 @@ namespace asuka1975 {
         std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
     private:
-        typename std::list<TRulePointer>::const_iterator pickupRule() const;
+        typename std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>>::const_iterator pickupRule() const;
     private:
-        std::list<TRulePointer> candidates;
+        std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>> candidates;
         std::vector<std::int32_t> finishOrder;
         std::int32_t finishCount = 0;
         std::size_t seekBackCount = 0;
