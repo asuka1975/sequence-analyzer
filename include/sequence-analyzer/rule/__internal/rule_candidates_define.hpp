@@ -5,7 +5,6 @@
 #include "sequence-analyzer/rule/read_status.hpp"
 
 #include <algorithm>
-#include <bits/ranges_algo.h>
 #include <cstddef>
 #include <cstdint>
 
