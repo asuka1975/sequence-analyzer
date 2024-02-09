@@ -14,28 +14,11 @@ namespace asuka1975 {
 
     template <class TItem, class TOutput, class TError>
     inline ReadStatus RuleSequence<TItem, TOutput, TError>::read(const TItem& item) {
-        history.push_back(item);
         ReadStatus status = rule->read(item);
+        seekBackCount = rule->getSeekBackCount();
         if(status == ReadStatus::Complete) {
             builder->add(rule->create());
-            auto seekBackCount = rule->getSeekBackCount();
             rule->reset();
-
-            std::list<TItem> extractedHistory;
-            extractedHistory.splice(extractedHistory.end(), std::move(history), std::prev(history.end(), seekBackCount), history.end());
-            while(!extractedHistory.empty()) {
-                auto status = this->read(extractedHistory.front());
-                extractedHistory.pop_front();
-                if(status == ReadStatus::Complete || status == ReadStatus::Reject) {
-                    unreadedOnCompleted = extractedHistory.size();
-                    return status;
-                } else {
-                    auto seekBackCount = rule->getSeekBackCount();
-                    if(seekBackCount > 0) {
-                        extractedHistory.splice(extractedHistory.begin(), std::move(history), std::prev(history.end(), seekBackCount), history.end());
-                    }
-                }
-            }
         }
         if(status == ReadStatus::Reject) {
             if(builder->ready()) {
@@ -59,13 +42,12 @@ namespace asuka1975 {
 
     template <class TItem, class TOutput, class TError>
     inline std::size_t RuleSequence<TItem, TOutput, TError>::getSeekBackCount() const noexcept {
-        return rule->getSeekBackCount() + unreadedOnCompleted;
+        return seekBackCount;
     }
 
     template <class TItem, class TOutput, class TError>
     inline void RuleSequence<TItem, TOutput, TError>::reset() {
-        unreadedOnCompleted = 0;
-        history.clear();
+        seekBackCount = 0;
         rule->reset();
         builder->reset();
     }

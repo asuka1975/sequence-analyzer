@@ -24,8 +24,7 @@ namespace asuka1975 {
     private:
         std::unique_ptr<Rule<TItem, TOutput, TError>> rule;
         std::unique_ptr<SequenceBuilder<TOutput, TError>> builder;
-        std::list<TItem> history;
-        std::size_t unreadedOnCompleted;
+        std::size_t seekBackCount = 0;
     };
 }
 
