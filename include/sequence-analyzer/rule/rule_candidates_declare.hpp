@@ -1,6 +1,8 @@
 #ifndef ASUKA1975_SEQUENCE_ANALYZER_RULE_RULE_CANDIDATES_DECLARE_HPP
 #define ASUKA1975_SEQUENCE_ANALYZER_RULE_RULE_CANDIDATES_DECLARE_HPP
 
+#include <cstddef>
+#include <cstdint>
 #include <list>
 #include <memory>
 #include <ranges>
@@ -18,11 +20,15 @@ namespace asuka1975 {
         ReadStatus read(const TItem& item) override;
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
+        std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
     private:
+        typename std::list<TRulePointer>::const_iterator pickupRule() const;
+    private:
         std::list<TRulePointer> candidates;
-        std::vector<bool> finished;
-        
+        std::vector<std::int32_t> finishOrder;
+        std::int32_t finishCount = 0;
+        std::size_t seekBackCount = 0;
     };
 }
 

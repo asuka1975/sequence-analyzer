@@ -31,7 +31,9 @@ namespace asuka1975 {
                     return status;
                 } else {
                     auto seekBackCount = rule->getSeekBackCount();
-                    extractedHistory.splice(extractedHistory.begin(), std::move(history), std::prev(history.end(), seekBackCount), history.end());
+                    if(seekBackCount > 0) {
+                        extractedHistory.splice(extractedHistory.begin(), std::move(history), std::prev(history.end(), seekBackCount), history.end());
+                    }
                 }
             }
         }
