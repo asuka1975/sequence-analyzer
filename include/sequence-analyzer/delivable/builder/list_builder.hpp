@@ -8,7 +8,7 @@ namespace asuka1975 {
     struct ListBuilder {
         virtual ~ListBuilder() = default;
         virtual void add(TOutput output) = 0;
-        virtual Result<TError, TOutput> builder() = 0;
+        virtual Result<TError, TOutput> create() = 0;
         virtual bool ready() const noexcept = 0;
         virtual void reset() = 0;
     };

@@ -21,8 +21,8 @@ namespace asuka1975 {
         std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
     private:
-        std::list<Rule<TItem, TOutput, TError>> ruleList;
-        typename std::list<Rule<TItem, TOutput, TError>>::iterator focus;
+        std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>> ruleList;
+        typename std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>>::iterator focus;
         std::unique_ptr<ListBuilder<TOutput, TError>> builder;
         std::size_t seekBackCount = 0;
     };

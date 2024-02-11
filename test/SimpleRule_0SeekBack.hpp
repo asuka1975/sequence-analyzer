@@ -7,7 +7,7 @@
 
 #include "Error.hpp"
 
-struct SimpleRule_0SeekBack : public virtual asuka1975::Rule<char, char, Error> {
+struct SimpleRule_0SeekBack : public virtual asuka1975::Rule<char, std::string, Error> {
     asuka1975::ReadStatus read(const char& item) override {
         if(memory == 'a') {
             return asuka1975::ReadStatus::Reject;
@@ -22,11 +22,11 @@ struct SimpleRule_0SeekBack : public virtual asuka1975::Rule<char, char, Error> 
         }
     }
 
-    asuka1975::Result<Error, char> create() const override {
+    asuka1975::Result<Error, std::string> create() const override {
         if(memory == 'a') {
-            return asuka1975::Result<Error, char> { memory };
+            return asuka1975::Result<Error, std::string> { std::string { memory } };
         } else {
-            return asuka1975::Result<Error, char> { getError() };
+            return asuka1975::Result<Error, std::string> { getError() };
         }
     }
 

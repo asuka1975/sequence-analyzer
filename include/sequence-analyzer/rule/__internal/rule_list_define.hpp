@@ -22,13 +22,20 @@ namespace asuka1975 {
         if(status == ReadStatus::Reject) {
             return status;
         } else if(status == ReadStatus::Complete) {
-            builder->add((*focus)->create());
+            auto result = (*focus)->create();
+            if(result.hasValue()) {
+                builder->add(result.get());
+            } else {
+                return ReadStatus::Reject;
+            }
             std::advance(focus, 1);
             if(focus == ruleList.end()) {
                 return ReadStatus::Complete;
             } else {
                 return ReadStatus::Continue;
             }
+        } else {
+            return ReadStatus::Continue;
         }
     }
 
@@ -45,6 +52,16 @@ namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     inline std::size_t RuleList<TItem, TOutput, TError>::getSeekBackCount() const noexcept {
         return seekBackCount;
+    }
+
+    template <class TItem, class TOutput, class TError>
+    inline void RuleList<TItem, TOutput, TError>::reset() {
+        for(auto& rule : ruleList) {
+            rule->reset();
+        }
+        focus = ruleList.begin();
+        builder->reset();
+        seekBackCount = 0;
     }
 }
 

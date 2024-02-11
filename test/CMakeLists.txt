@@ -14,3 +14,4 @@ function(add_unittest test_suit)
 endfunction()
 
 add_unittest(rule_test)
+add_unittest(list_rule_test)
