@@ -31,7 +31,7 @@ protected:
     std::unique_ptr<asuka1975::SequenceAnalyzer<char, std::string, Error>> analyzer;
 };
 
-class RuleSimpleTest2 : public ::testing::Test {
+class Rule1SeekBackTest : public ::testing::Test {
 protected:
     void SetUp() override {
         std::list<std::unique_ptr<asuka1975::Rule<char, std::string, Error>>> rules;
@@ -92,7 +92,7 @@ TEST_F(RuleSimpleTest1, RejectAndComplete_0SeekBackCase) {
     EXPECT_EQ(1, result.getError().code);
 }
 
-TEST_F(RuleSimpleTest2, NormalCase1) {
+TEST_F(Rule1SeekBackTest, NormalCase1) {
     std::string s = "a+";
     auto result = analyzer->analyze(s);
 
@@ -100,7 +100,7 @@ TEST_F(RuleSimpleTest2, NormalCase1) {
     EXPECT_EQ("a+", result.get());
 }
 
-TEST_F(RuleSimpleTest2, NormalCase2) {
+TEST_F(Rule1SeekBackTest, NormalCase2) {
     std::string s = "+";
     auto result = analyzer->analyze(s);
 
@@ -108,8 +108,15 @@ TEST_F(RuleSimpleTest2, NormalCase2) {
     EXPECT_EQ("+", result.get());
 }
 
+TEST_F(Rule1SeekBackTest, NormalCase3) {
+    std::string s = "aa+";
+    auto result = analyzer->analyze(s);
 
-TEST_F(RuleSimpleTest2, ErrorCase1) {
+    EXPECT_TRUE(result.hasValue());
+    EXPECT_EQ("aa+", result.get());
+}
+
+TEST_F(Rule1SeekBackTest, ErrorCase1) {
     std::string s = "a;";
     auto result = analyzer->analyze(s);
 
@@ -117,7 +124,7 @@ TEST_F(RuleSimpleTest2, ErrorCase1) {
     EXPECT_EQ(1, result.getError().code);
 }
 
-TEST_F(RuleSimpleTest2, ErrorCase2) {
+TEST_F(Rule1SeekBackTest, ErrorCase2) {
     std::string s = "-;";
     auto result = analyzer->analyze(s);
 
@@ -125,7 +132,7 @@ TEST_F(RuleSimpleTest2, ErrorCase2) {
     EXPECT_EQ(1, result.getError().code);
 }
 
-TEST_F(RuleSimpleTest2, ErrorCase_surplus_char1) {
+TEST_F(Rule1SeekBackTest, ErrorCase_surplus_char1) {
     std::string s = "+;";
     auto result = analyzer->analyze(s);
 
@@ -133,7 +140,7 @@ TEST_F(RuleSimpleTest2, ErrorCase_surplus_char1) {
     EXPECT_EQ(0, result.getError().code);
 }
 
-TEST_F(RuleSimpleTest2, ErrorCase_surplus_char2) {
+TEST_F(Rule1SeekBackTest, ErrorCase_surplus_char2) {
     std::string s = "+a";
     auto result = analyzer->analyze(s);
 
