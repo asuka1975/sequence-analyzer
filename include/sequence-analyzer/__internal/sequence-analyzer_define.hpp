@@ -2,6 +2,7 @@
 #define ASUKA1975_SEQUENCE_ANALYZER___INTERNAL_SEQUENCE_ANALYZER_HPP
 
 #include "../sequence-analyzer_declare.hpp"
+#include "sequence-analyzer/rule/read_status.hpp"
 #include <bits/ranges_base.h>
 #include <iterator>
 
@@ -17,6 +18,8 @@ namespace asuka1975 {
             ReadStatus status = rule->read(*iter);
             if(status == ReadStatus::Reject) {
                 return Result<TError, TOutput> { rule->getError() };
+            } else if(status == ReadStatus::Complete && std::next(iter) != std::ranges::end(sequence)) {
+                return Result<TError, TOutput> { TError {} };
             }
             auto seekBackCount = rule->getSeekBackCount();
             if(seekBackCount != 0) {

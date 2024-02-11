@@ -71,7 +71,7 @@ TEST_F(RuleSimpleTest, CompleteAndReject_0SeekBackCase) {
     auto result = analyzer->analyze(s);
 
     EXPECT_FALSE(result.hasValue());
-    EXPECT_EQ(1, result.getError().code);
+    EXPECT_EQ(0, result.getError().code);
 }
 
 TEST_F(RuleSimpleTest, CompleteAndComplete_0SeekBackCase) {
@@ -79,7 +79,7 @@ TEST_F(RuleSimpleTest, CompleteAndComplete_0SeekBackCase) {
     auto result = analyzer->analyze(s);
 
     EXPECT_FALSE(result.hasValue());
-    EXPECT_EQ(1, result.getError().code);
+    EXPECT_EQ(0, result.getError().code);
 }
 
 TEST_F(RuleSimpleTest, RejectAndComplete_0SeekBackCase) {
