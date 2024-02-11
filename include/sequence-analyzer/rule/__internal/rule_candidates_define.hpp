@@ -14,8 +14,8 @@ namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     template <std::ranges::input_range TCandidates>
         requires std::same_as<std::ranges::range_value_t<TCandidates>, std::unique_ptr<Rule<TItem, TOutput, TError>>>
-    inline RuleCandidates<TItem, TOutput, TError>::RuleCandidates(TCandidates candidates) : candidates(std::ranges::size(candidates)), finishOrder(std::ranges::size(candidates)) {
-        std::ranges::move(candidates, this->candidates);
+    inline RuleCandidates<TItem, TOutput, TError>::RuleCandidates(TCandidates candidates) : finishOrder(std::ranges::size(candidates)) {
+        std::ranges::move(candidates, std::back_inserter(this->candidates));
     }
 
 
@@ -24,20 +24,32 @@ namespace asuka1975 {
         std::size_t i = 0;
         for(auto& candidate : candidates) {
             if(finishOrder[i] != 0) {
+                i++;
                 continue;
             }
             auto status = candidate->read(item);
             if(status == ReadStatus::Complete) {
                 finishOrder[i] = std::ranges::count_if(finishOrder, [](auto& v) { return v > 0; }) + 1;
                 seekBackCount = 0;
+                finishCount++;
             } else if(status == ReadStatus::Reject) {
                 finishOrder[i] = -1;
+                finishCount++;
             }
 
             i++;
         }
 
-        seekBackCount++;
+
+        if(finishCount == finishOrder.size()) {
+            if(std::ranges::count(finishOrder, -1) == finishCount) {
+                return ReadStatus::Reject;
+            } else {
+                return ReadStatus::Complete;
+            }
+        } else {
+            return ReadStatus::Continue;
+        }
     }
 
     template <class TItem, class TOutput, class TError>

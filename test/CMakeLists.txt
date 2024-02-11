@@ -15,3 +15,4 @@ endfunction()
 
 add_unittest(rule_test)
 add_unittest(list_rule_test)
+add_unittest(candidate_rule_test)
