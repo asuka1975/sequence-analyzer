@@ -1,0 +1,29 @@
+#ifndef ASUKA1975_SEQUENCE_ANALYZER_RULE_RULE_DECLARE_HPP
+#define ASUKA1975_SEQUENCE_ANALYZER_RULE_RULE_DECLARE_HPP
+
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+
+#include "result/result.hpp"
+#include "sequence-analyzer/rule/read_status.hpp"
+
+namespace asuka1975 {
+    template <class TItem, class TOutput, class TError>
+    class Rule {
+    public:
+        virtual ~Rule() = default;
+        ReadStatus read(const TItem& item);
+        virtual Result<TError, TOutput> create() const = 0;
+        virtual TError getError() const noexcept = 0;
+        virtual std::size_t getSeekBackCount() const noexcept = 0;
+        virtual void reset() = 0;
+    protected:
+        virtual ReadStatus readInternal(const TItem& item) = 0;
+    private:
+        ReadStatus readingStatus = ReadStatus::Continue;
+        std::size_t seekBackCountOnError = 0;
+    };
+}
+
+#endif

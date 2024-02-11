@@ -15,11 +15,12 @@ namespace asuka1975 {
         template <std::ranges::input_range TRuleList>
             requires std::same_as<std::ranges::range_value_t<TRuleList>, std::unique_ptr<Rule<TItem, TOutput, TError>>>
         RuleList(TRuleList ruleList, std::unique_ptr<ListBuilder<TOutput, TError>> builder);
-        ReadStatus read(const TItem& item) override;
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
         std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
+    protected:
+        ReadStatus readInternal(const TItem& item) override;
     private:
         std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>> ruleList;
         typename std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>>::iterator focus;

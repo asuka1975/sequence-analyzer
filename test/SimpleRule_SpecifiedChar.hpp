@@ -10,7 +10,8 @@
 struct SimpleRule_SpecifiedChar : public virtual asuka1975::Rule<char, std::string, Error> {
     SimpleRule_SpecifiedChar(char target) : target(target) {}
 
-    asuka1975::ReadStatus read(const char& item) override {
+protected:
+    asuka1975::ReadStatus readInternal(const char& item) override {
         if(memory == target) {
             return asuka1975::ReadStatus::Reject;
         }
@@ -21,7 +22,7 @@ struct SimpleRule_SpecifiedChar : public virtual asuka1975::Rule<char, std::stri
             return asuka1975::ReadStatus::Reject;
         }
     }
-
+public:
     asuka1975::Result<Error, std::string> create() const override {
         if(memory == target) {
             return asuka1975::Result<Error, std::string> { std::string { memory } };

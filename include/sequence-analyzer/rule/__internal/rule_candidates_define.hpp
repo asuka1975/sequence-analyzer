@@ -20,7 +20,7 @@ namespace asuka1975 {
 
 
     template <class TItem, class TOutput, class TError>
-    inline ReadStatus RuleCandidates<TItem, TOutput, TError>::read(const TItem& item) {
+    inline ReadStatus RuleCandidates<TItem, TOutput, TError>::readInternal(const TItem& item) {
         std::size_t i = 0;
         for(auto& candidate : candidates) {
             if(finishOrder[i] != 0) {

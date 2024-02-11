@@ -17,11 +17,12 @@ namespace asuka1975 {
         template <std::ranges::input_range TCandidates>
             requires std::same_as<std::ranges::range_value_t<TCandidates>, std::unique_ptr<Rule<TItem, TOutput, TError>>>
         RuleCandidates(TCandidates candidates);
-        ReadStatus read(const TItem& item) override;
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
         std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
+    protected:
+        ReadStatus readInternal(const TItem& item) override;
     private:
         typename std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>>::const_iterator pickupRule() const;
     private:

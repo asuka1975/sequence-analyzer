@@ -13,7 +13,7 @@ namespace asuka1975 {
     inline RuleSequence<TItem, TOutput, TError>::RuleSequence(std::unique_ptr<Rule<TItem, TOutput, TError>> rule, std::unique_ptr<SequenceBuilder<TOutput, TError>> builder) : rule(rule), builder(builder) {}
 
     template <class TItem, class TOutput, class TError>
-    inline ReadStatus RuleSequence<TItem, TOutput, TError>::read(const TItem& item) {
+    inline ReadStatus RuleSequence<TItem, TOutput, TError>::readInternal(const TItem& item) {
         ReadStatus status = rule->read(item);
         seekBackCount = rule->getSeekBackCount();
         if(status == ReadStatus::Complete) {

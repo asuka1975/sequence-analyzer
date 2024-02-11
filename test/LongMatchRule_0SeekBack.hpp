@@ -8,7 +8,8 @@
 #include "Error.hpp"
 
 struct LongMatchRule_0SeekBack : public virtual asuka1975::Rule<char, std::string, Error> {
-    asuka1975::ReadStatus read(const char& item) override {
+protected:
+    asuka1975::ReadStatus readInternal(const char& item) override {
         if(memory.size() == 2) {
             return asuka1975::ReadStatus::Reject;
         }
@@ -23,7 +24,7 @@ struct LongMatchRule_0SeekBack : public virtual asuka1975::Rule<char, std::strin
             return asuka1975::ReadStatus::Reject;
         }
     }
-
+public:
     asuka1975::Result<Error, std::string> create() const override {
         if(memory.size() == 2) {
             return asuka1975::Result<Error, std::string> { memory };

@@ -16,11 +16,12 @@ namespace asuka1975 {
     class RuleSequence : public virtual Rule<TItem, TOutput, TError> {
     public:
         RuleSequence(std::unique_ptr<Rule<TItem, TOutput, TError>> rule, std::unique_ptr<SequenceBuilder<TOutput, TError>> builder);
-        ReadStatus read(const TItem& item) override;
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
         std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
+    protected:
+        ReadStatus readInternal(const TItem& item) override;
     private:
         std::unique_ptr<Rule<TItem, TOutput, TError>> rule;
         std::unique_ptr<SequenceBuilder<TOutput, TError>> builder;

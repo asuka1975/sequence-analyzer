@@ -16,7 +16,7 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
-    inline ReadStatus RuleList<TItem, TOutput, TError>::read(const TItem& item) {
+    inline ReadStatus RuleList<TItem, TOutput, TError>::readInternal(const TItem& item) {
         auto status = (*focus)->read(item);
         seekBackCount = (*focus)->getSeekBackCount();
         if(status == ReadStatus::Reject) {
