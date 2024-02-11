@@ -49,4 +49,31 @@ TEST_F(TwoCandidatesRule_NoSeekBackTest, NormalCase_1Length_And_2Length_Target_l
     EXPECT_EQ("aa", result.get());
 }
 
+TEST_F(TwoCandidatesRule_NoSeekBackTest, NormalCase_1Length_And_2Length_LongRuleReject) {
+    std::string s = "ba";
+
+    auto result = analyzer->analyze(s);
+
+    EXPECT_TRUE(result.hasValue());
+    EXPECT_EQ("a", result.get());
+}
+
+TEST_F(TwoCandidatesRule_NoSeekBackTest, ErrorCase1_1Length_And_2Length) {
+    std::string s = "c";
+
+    auto result = analyzer->analyze(s);
+
+    EXPECT_FALSE(result.hasValue());
+    EXPECT_EQ(1, result.getError().code);
+}
+
+TEST_F(TwoCandidatesRule_NoSeekBackTest, ErrorCase2_1Length_And_2Length) {
+    std::string s = "cc";
+
+    auto result = analyzer->analyze(s);
+
+    EXPECT_FALSE(result.hasValue());
+    EXPECT_EQ(1, result.getError().code);
+}
+
 }
