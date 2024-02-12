@@ -50,7 +50,7 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
-    inline std::size_t RuleList<TItem, TOutput, TError>::getSeekBackCount() const noexcept {
+    inline std::size_t RuleList<TItem, TOutput, TError>::getSeekBackCountInternal() const noexcept {
         return seekBackCount;
     }
 

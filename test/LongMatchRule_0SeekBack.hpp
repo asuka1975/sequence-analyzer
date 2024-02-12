@@ -24,6 +24,9 @@ protected:
             return asuka1975::ReadStatus::Reject;
         }
     }
+    std::size_t getSeekBackCountInternal() const noexcept override {
+        return 0;
+    }
 public:
     asuka1975::Result<Error, std::string> create() const override {
         if(memory.size() == 2) {
@@ -35,10 +38,6 @@ public:
 
     Error getError() const noexcept override {
         return Error { 1 };
-    }
-
-    std::size_t getSeekBackCount() const noexcept override {
-        return 0;
     }
 
     void reset() override {

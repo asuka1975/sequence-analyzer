@@ -19,10 +19,10 @@ namespace asuka1975 {
         RuleCandidates(TCandidates candidates);
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
-        std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
     protected:
         ReadStatus readInternal(const TItem& item) override;
+        std::size_t getSeekBackCountInternal() const noexcept override;
     private:
         typename std::list<std::unique_ptr<Rule<TItem, TOutput, TError>>>::const_iterator pickupRule() const;
     private:

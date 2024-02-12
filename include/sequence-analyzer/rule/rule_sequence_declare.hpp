@@ -18,10 +18,10 @@ namespace asuka1975 {
         RuleSequence(std::unique_ptr<Rule<TItem, TOutput, TError>> rule, std::unique_ptr<SequenceBuilder<TOutput, TError>> builder);
         Result<TError, TOutput> create() const override;
         TError getError() const noexcept override;
-        std::size_t getSeekBackCount() const noexcept override;
         void reset() override;
     protected:
         ReadStatus readInternal(const TItem& item) override;
+        std::size_t getSeekBackCountInternal() const noexcept override;
     private:
         std::unique_ptr<Rule<TItem, TOutput, TError>> rule;
         std::unique_ptr<SequenceBuilder<TOutput, TError>> builder;

@@ -16,10 +16,11 @@ namespace asuka1975 {
         ReadStatus read(const TItem& item);
         virtual Result<TError, TOutput> create() const = 0;
         virtual TError getError() const noexcept = 0;
-        virtual std::size_t getSeekBackCount() const noexcept = 0;
+        std::size_t getSeekBackCount() const noexcept;
         virtual void reset() = 0;
     protected:
         virtual ReadStatus readInternal(const TItem& item) = 0;
+        virtual std::size_t getSeekBackCountInternal() const noexcept = 0;
     private:
         ReadStatus readingStatus = ReadStatus::Continue;
         std::size_t seekBackCountOnError = 0;

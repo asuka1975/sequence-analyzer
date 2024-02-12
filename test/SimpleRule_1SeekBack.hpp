@@ -25,6 +25,16 @@ protected:
 
         return status;
     }
+
+    std::size_t getSeekBackCountInternal() const noexcept override {
+        if(status == asuka1975::ReadStatus::Complete) {
+            return 1;
+        } else if (status == asuka1975::ReadStatus::Continue) {
+            return 0;
+        } else {
+            return readCount;
+        }
+    }
 public:
     asuka1975::Result<Error, std::string> create() const override {
         if(status == asuka1975::ReadStatus::Complete) {
@@ -36,16 +46,6 @@ public:
 
     Error getError() const noexcept override {
         return Error { 1 };
-    }
-
-    std::size_t getSeekBackCount() const noexcept override {
-        if(status == asuka1975::ReadStatus::Complete) {
-            return 1;
-        } else if (status == asuka1975::ReadStatus::Continue) {
-            return 0;
-        } else {
-            return readCount;
-        }
     }
 
     void reset() override {
