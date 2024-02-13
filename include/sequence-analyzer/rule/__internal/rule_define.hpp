@@ -8,10 +8,9 @@ namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     inline ReadStatus Rule<TItem, TOutput, TError>::read(const TItem& item) {
         readingStatus = readInternal(item);
+        seekBackCountOnError++;
 
-        if(readingStatus == ReadStatus::Continue) {
-            seekBackCountOnError++;
-        } else if(readingStatus == ReadStatus::Complete) {
+        if(readingStatus == ReadStatus::Complete) {
             seekBackCountOnError = 0;
         }
 

@@ -10,14 +10,19 @@
 
 namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
-    inline RuleSequence<TItem, TOutput, TError>::RuleSequence(std::unique_ptr<Rule<TItem, TOutput, TError>> rule, std::unique_ptr<SequenceBuilder<TOutput, TError>> builder) : rule(rule), builder(builder) {}
+    inline RuleSequence<TItem, TOutput, TError>::RuleSequence(std::unique_ptr<Rule<TItem, TOutput, TError>> rule, std::unique_ptr<SequenceBuilder<TOutput, TError>> builder) : rule(std::move(rule)), builder(std::move(builder)) {}
 
     template <class TItem, class TOutput, class TError>
     inline ReadStatus RuleSequence<TItem, TOutput, TError>::readInternal(const TItem& item) {
         ReadStatus status = rule->read(item);
         seekBackCount = rule->getSeekBackCount();
         if(status == ReadStatus::Complete) {
-            builder->add(rule->create());
+            auto result = rule->create();
+            if(result.hasValue()) {
+                builder->add(result.get());
+            } else {
+                return ReadStatus::Reject;
+            }
             rule->reset();
         }
         if(status == ReadStatus::Reject) {
