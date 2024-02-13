@@ -51,7 +51,7 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
-    inline void RuleSequence<TItem, TOutput, TError>::reset() {
+    inline void RuleSequence<TItem, TOutput, TError>::resetInternal() {
         seekBackCount = 0;
         rule->reset();
         builder->reset();

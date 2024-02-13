@@ -25,6 +25,13 @@ namespace asuka1975 {
             return getSeekBackCountInternal();
         }
     }
+
+    template <class TItem, class TOutput, class TError>
+    inline void Rule<TItem, TOutput, TError>::reset() {
+        seekBackCountOnError = 0;
+
+        this->resetInternal();
+    }
 }
 
 #endif

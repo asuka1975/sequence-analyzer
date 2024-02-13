@@ -35,6 +35,11 @@ protected:
             return readCount;
         }
     }
+
+    void resetInternal() override {
+        memory = "";
+        readCount = 0;
+    }
 public:
     asuka1975::Result<Error, std::string> create() const override {
         if(status == asuka1975::ReadStatus::Complete) {
@@ -46,11 +51,6 @@ public:
 
     Error getError() const noexcept override {
         return Error { 1 };
-    }
-
-    void reset() override {
-        memory = "";
-        readCount = 0;
     }
 
     std::string memory = "";

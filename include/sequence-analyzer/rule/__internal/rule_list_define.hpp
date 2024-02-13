@@ -55,7 +55,7 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
-    inline void RuleList<TItem, TOutput, TError>::reset() {
+    inline void RuleList<TItem, TOutput, TError>::resetInternal() {
         for(auto& rule : ruleList) {
             rule->reset();
         }

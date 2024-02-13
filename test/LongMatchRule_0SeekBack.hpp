@@ -27,6 +27,11 @@ protected:
     std::size_t getSeekBackCountInternal() const noexcept override {
         return 0;
     }
+
+    void resetInternal() override {
+        memory = "";
+    }
+
 public:
     asuka1975::Result<Error, std::string> create() const override {
         if(memory.size() == 2) {
@@ -38,10 +43,6 @@ public:
 
     Error getError() const noexcept override {
         return Error { 1 };
-    }
-
-    void reset() override {
-        memory = "";
     }
 
     std::string memory = "";

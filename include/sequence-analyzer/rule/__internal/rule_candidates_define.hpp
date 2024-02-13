@@ -68,7 +68,7 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
-    inline void RuleCandidates<TItem, TOutput, TError>::reset() {
+    inline void RuleCandidates<TItem, TOutput, TError>::resetInternal() {
         for(auto& candidate : candidates) {
             candidate->reset();
         }
