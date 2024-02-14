@@ -24,13 +24,15 @@ namespace asuka1975 {
                 return ReadStatus::Reject;
             }
             rule->reset();
-        }
-        if(status == ReadStatus::Reject) {
+        } else if(status == ReadStatus::Reject) {
             if(builder->ready()) {
+                seekBackCount -= seekBackCountOnContinue / 2;
                 return ReadStatus::Complete;
             } else {
                 return status;
             }
+        } else {
+            seekBackCountOnContinue += seekBackCount;
         }
         return ReadStatus::Continue;
     }
@@ -53,6 +55,7 @@ namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     inline void RuleSequence<TItem, TOutput, TError>::resetInternal() {
         seekBackCount = 0;
+        seekBackCountOnContinue = 0;
         rule->reset();
         builder->reset();
     }

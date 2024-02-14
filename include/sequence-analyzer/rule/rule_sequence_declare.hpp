@@ -26,6 +26,7 @@ namespace asuka1975 {
         std::unique_ptr<Rule<TItem, TOutput, TError>> rule;
         std::unique_ptr<SequenceBuilder<TOutput, TError>> builder;
         std::size_t seekBackCount = 0;
+        std::size_t seekBackCountOnContinue = 0;
     };
 }
 
