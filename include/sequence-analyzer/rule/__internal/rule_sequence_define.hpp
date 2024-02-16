@@ -23,10 +23,11 @@ namespace asuka1975 {
             } else {
                 return ReadStatus::Reject;
             }
+            seekBackCountOnContinue = 0;
             rule->reset();
         } else if(status == ReadStatus::Reject) {
             if(builder->ready()) {
-                seekBackCount -= seekBackCountOnContinue / 2;
+                seekBackCount -= seekBackCountOnContinue;
                 return ReadStatus::Complete;
             } else {
                 return status;

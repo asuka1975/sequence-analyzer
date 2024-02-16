@@ -4,7 +4,9 @@
 #include "SimpleRule_1SeekBack.hpp"
 #include "SimpleRule_SpecifiedChar.hpp"
 #include "SimpleRule_SpecifiedChar2.hpp"
+#include "SimpleRule_SpecifiedCharN.hpp"
 #include "SimpleRule_SpecifiedChar_Pool2OnError.hpp"
+#include "SimpleRule_SpecifiedChar_PoolNOnError.hpp"
 #include "result/result.hpp"
 #include "sequence-analyzer/delivable/builder/list_builder.hpp"
 #include "sequence-analyzer/delivable/builder/sequence_builder.hpp"
@@ -16,6 +18,7 @@
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <ostream>
 #include <string>
 
 #include "sequence-analyzer/rule/rule.hpp"
@@ -149,6 +152,46 @@ protected:
     std::unique_ptr<asuka1975::SequenceAnalyzer<char, std::string, Error>> analyzer;
 };
 
+struct TestParam {
+    std::string testName;
+    std::string analyzee;
+    std::string expect;
+    int number;
+};
+
+std::ostream& operator<<(std::ostream& os, const TestParam& p) {
+    return (os << p.testName);
+}
+
+class PlusEndRule_Nested_NSeekBackTest : public ::testing::TestWithParam<TestParam> {
+protected:
+    void SetUp() override {
+        auto param = GetParam();
+
+        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> aSequence1 = std::make_unique<asuka1975::RuleSequence<char, std::string, Error>>(std::make_unique<SimpleRule_SpecifiedCharPoolNOnError>('a', param.number), std::make_unique<SimpleSequenceBuilder>());
+        std::list<std::unique_ptr<asuka1975::Rule<char, std::string, Error>>> aSequenceEndPlusRules;
+        aSequenceEndPlusRules.push_back(std::move(aSequence1));
+        aSequenceEndPlusRules.push_back(std::make_unique<SimpleRule_SpecifiedCharN>('+', param.number));
+        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> aSequenceEndPlus = std::make_unique<asuka1975::RuleList<char, std::string, Error>>(std::move(aSequenceEndPlusRules), std::make_unique<SimpleListBuilder>());
+        
+
+        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> aSequence2 = std::make_unique<asuka1975::RuleSequence<char, std::string, Error>>(std::make_unique<SimpleRule_SpecifiedCharPoolNOnError>('a', param.number), std::make_unique<SimpleSequenceBuilder>());
+        std::list<std::unique_ptr<asuka1975::Rule<char, std::string, Error>>> aSequenceEndSemicolonRules;
+        aSequenceEndSemicolonRules.push_back(std::move(aSequence2));
+        aSequenceEndSemicolonRules.push_back(std::make_unique<SimpleRule_SpecifiedCharN>(';', param.number));
+        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> aSequenceEndSemicolon = std::make_unique<asuka1975::RuleList<char, std::string, Error>>(std::move(aSequenceEndSemicolonRules), std::make_unique<SimpleListBuilder>());
+
+        std::list<std::unique_ptr<asuka1975::Rule<char, std::string, Error>>> rules;
+        rules.push_back(std::make_unique<asuka1975::RuleSequence<char, std::string, Error>>(std::move(aSequenceEndPlus), std::make_unique<SimpleSequenceBuilder>()));
+        rules.push_back(std::move(aSequenceEndSemicolon));
+
+        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> rule = std::make_unique<asuka1975::RuleList<char, std::string, Error>>(std::move(rules), std::make_unique<SimpleListBuilder>());
+        analyzer = std::make_unique<asuka1975::SequenceAnalyzer<char, std::string, Error>>(std::move(rule));
+    }
+
+    std::unique_ptr<asuka1975::SequenceAnalyzer<char, std::string, Error>> analyzer;
+};
+
 TEST_F(SimpleSequenceRule_NoSeekBackTest, NormalCase_1Length_And_2Length_Target_length1) {
     std::string s = "a";
 
@@ -247,5 +290,23 @@ TEST_F(PlusEndRule_Nested_2SeekBackTest, NormalCase1) {
     EXPECT_TRUE(result.hasValue());
     EXPECT_EQ("aa++a++aaaa;;", result.get());
 }
+
+TEST_P(PlusEndRule_Nested_NSeekBackTest, NormalCase) {
+    auto param = GetParam();
+
+    auto result = analyzer->analyze(param.analyzee);
+
+    EXPECT_TRUE(result.hasValue());
+    EXPECT_EQ(param.expect, result.get());
+}
+
+INSTANTIATE_TEST_SUITE_P(OkTest, PlusEndRule_Nested_NSeekBackTest,
+    testing::Values(
+        TestParam { "NSeekBack1", "aa++a++aaaa;;", "aa++a++aaaa;;", 2 },
+        TestParam { "NSeekBack2", "aa+++a+++aaaa;;;", "aa+++a+++aaaa;;;", 3 },
+        TestParam { "NSeekBack3", "aa++++a++++aaaa;;;;", "aa++++a++++aaaa;;;;", 4 }
+    ),
+    testing::PrintToStringParamName() // 追加
+);
 
 }
