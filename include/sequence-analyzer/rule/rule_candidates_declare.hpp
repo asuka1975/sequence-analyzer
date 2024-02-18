@@ -21,6 +21,7 @@ namespace asuka1975 {
         TError getError() const noexcept override;
     protected:
         ReadStatus readInternal(const TItem& item) override;
+        ReadStatus readLastInternal(const TItem& item) override;
         std::size_t getSeekBackCountInternal() const noexcept override;
         void resetInternal() override;
     private:
@@ -30,6 +31,7 @@ namespace asuka1975 {
         std::vector<std::int32_t> finishOrder;
         std::int32_t finishCount = 0;
         std::size_t seekBackCount = 0;
+        std::list<TItem> history;
     };
 }
 

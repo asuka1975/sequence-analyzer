@@ -40,6 +40,30 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
+    inline ReadStatus RuleList<TItem, TOutput, TError>::readLastInternal(const TItem& item) {
+        auto status = (*focus)->readLast(item);
+        seekBackCount = (*focus)->getSeekBackCount();
+        if(status == ReadStatus::Reject) {
+            return status;
+        } else if(status == ReadStatus::Complete) {
+            auto result = (*focus)->create();
+            if(result.hasValue()) {
+                builder->add(result.get());
+            } else {
+                return ReadStatus::Reject;
+            }
+            std::advance(focus, 1);
+            if(focus == ruleList.end()) {
+                return ReadStatus::Complete;
+            } else {
+                return ReadStatus::Continue;
+            }
+        } else {
+            return ReadStatus::Continue;
+        }
+    }
+
+    template <class TItem, class TOutput, class TError>
     inline Result<TError, TOutput> RuleList<TItem, TOutput, TError>::create() const {
         return builder->create();
     }

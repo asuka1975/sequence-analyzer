@@ -15,7 +15,12 @@ namespace asuka1975 {
         requires std::same_as<std::ranges::range_value_t<TAnalyzeeSequence>, TItem>
     inline Result<TError, TOutput> SequenceAnalyzer<TItem, TOutput, TError>::analyze(const TAnalyzeeSequence& sequence) {
         for(auto iter = std::ranges::begin(sequence); iter != std::ranges::end(sequence); std::advance(iter, 1)) {
-            ReadStatus status = rule->read(*iter);
+            ReadStatus status;
+            if(std::next(iter) == std::ranges::end(sequence)) {
+                status = rule->readLast(*iter);
+            } else {
+                status = rule->read(*iter);
+            }
             if(status == ReadStatus::Reject) {
                 return Result<TError, TOutput> { rule->getError() };
             } else if(status == ReadStatus::Complete && std::next(iter) != std::ranges::end(sequence)) {

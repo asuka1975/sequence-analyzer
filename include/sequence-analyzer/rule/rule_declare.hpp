@@ -14,12 +14,14 @@ namespace asuka1975 {
     public:
         virtual ~Rule() = default;
         ReadStatus read(const TItem& item);
+        ReadStatus readLast(const TItem& item);
         virtual Result<TError, TOutput> create() const = 0;
         virtual TError getError() const noexcept = 0;
         std::size_t getSeekBackCount() const noexcept;
         void reset();
     protected:
         virtual ReadStatus readInternal(const TItem& item) = 0;
+        virtual ReadStatus readLastInternal(const TItem& item);
         virtual std::size_t getSeekBackCountInternal() const noexcept = 0;
         virtual void resetInternal() = 0;
     private:

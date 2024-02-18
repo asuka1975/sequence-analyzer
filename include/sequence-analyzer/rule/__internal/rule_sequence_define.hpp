@@ -39,6 +39,32 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
+    inline ReadStatus RuleSequence<TItem, TOutput, TError>::readLastInternal(const TItem& item) {
+        ReadStatus status = rule->readLast(item);
+        seekBackCount = rule->getSeekBackCount();
+        if(status == ReadStatus::Complete) {
+            auto result = rule->create();
+            if(result.hasValue()) {
+                builder->add(result.get());
+            } else {
+                return ReadStatus::Reject;
+            }
+            seekBackCountOnContinue = 0;
+            rule->reset();
+        } else if(status == ReadStatus::Reject) {
+            if(builder->ready()) {
+                seekBackCount -= seekBackCountOnContinue;
+                return ReadStatus::Complete;
+            } else {
+                return status;
+            }
+        } else {
+            seekBackCountOnContinue += seekBackCount;
+        }
+        return ReadStatus::Continue;
+    }
+
+    template <class TItem, class TOutput, class TError>
     inline Result<TError, TOutput> RuleSequence<TItem, TOutput, TError>::create() const {
         return builder->create();
     }

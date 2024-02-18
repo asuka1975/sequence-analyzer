@@ -18,6 +18,18 @@ namespace asuka1975 {
     }
 
     template <class TItem, class TOutput, class TError>
+    inline ReadStatus Rule<TItem, TOutput, TError>::readLast(const TItem& item) {
+        readingStatus = readLastInternal(item);
+        seekBackCountOnError++;
+
+        if(readingStatus == ReadStatus::Complete) {
+            seekBackCountOnError = 0;
+        }
+
+        return readingStatus;
+    }
+
+    template <class TItem, class TOutput, class TError>
     inline std::size_t Rule<TItem, TOutput, TError>::getSeekBackCount() const noexcept {
         if(readingStatus == ReadStatus::Reject) {
             return seekBackCountOnError;
@@ -31,6 +43,11 @@ namespace asuka1975 {
         seekBackCountOnError = 0;
 
         this->resetInternal();
+    }
+
+    template <class TItem, class TOutput, class TError>
+    inline ReadStatus Rule<TItem, TOutput, TError>::readLastInternal(const TItem& item) {
+        return read(item);
     }
 }
 

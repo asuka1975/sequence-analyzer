@@ -10,6 +10,7 @@
 #include "sequence-analyzer/delivable/builder/sequence_builder.hpp"
 #include "sequence-analyzer/rule/rule_candidates.hpp"
 #include "sequence-analyzer/rule/rule_list.hpp"
+#include "sequence-analyzer/rule/rule_list_declare.hpp"
 #include "sequence-analyzer/rule/rule_sequence.hpp"
 #include "sequence-analyzer/sequence-analyzer.hpp"
 #include "sequence-analyzer/rule/rule_candidates.hpp"
@@ -111,7 +112,7 @@ protected:
         ruleList.push_back(std::move(candidates));
         ruleList.push_back(std::make_unique<SimpleRule_SpecifiedCharN>(';', 2));
 
-        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> rule = std::make_unique<asuka1975::RuleCandidates<char, std::string, Error>>(std::move(ruleList));
+        std::unique_ptr<asuka1975::Rule<char, std::string, Error>> rule = std::make_unique<asuka1975::RuleList<char, std::string, Error>>(std::move(ruleList), std::make_unique<SimpleListBuilder>());
         analyzer = std::make_unique<asuka1975::SequenceAnalyzer<char, std::string, Error>>(std::move(rule));
     }
 

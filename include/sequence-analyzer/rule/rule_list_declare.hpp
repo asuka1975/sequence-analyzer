@@ -6,6 +6,7 @@
 #include <ranges>
 
 #include "sequence-analyzer/delivable/builder/list_builder.hpp"
+#include "sequence-analyzer/rule/read_status.hpp"
 #include "sequence-analyzer/rule/rule.hpp"
 
 namespace asuka1975 {
@@ -19,6 +20,7 @@ namespace asuka1975 {
         TError getError() const noexcept override;
     protected:
         ReadStatus readInternal(const TItem& item) override;
+        ReadStatus readLastInternal(const TItem& item) override;
         std::size_t getSeekBackCountInternal() const noexcept override;
         void resetInternal() override;
     private:
