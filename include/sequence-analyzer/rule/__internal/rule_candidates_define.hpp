@@ -55,7 +55,6 @@ namespace asuka1975 {
                     } else {
                         auto _seekBackCount = candidate->getSeekBackCount();
                         iter = std::prev(iter, _seekBackCount);
-                        continue;
                     }
                     std::advance(iter, 1);
                 }
