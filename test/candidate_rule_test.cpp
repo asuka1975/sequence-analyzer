@@ -191,4 +191,22 @@ TEST_F(TwoCandidatesRule_SeekBackTest, ErrorCase1) {
     EXPECT_EQ(1, result.getError().code);
 }
 
+TEST_F(TwoCandidatesRule_SeekBackTest, ErrorCase2) {
+    std::string s = "aa";
+
+    auto result = analyzer->analyze(s);
+
+    EXPECT_FALSE(result.hasValue());
+    EXPECT_EQ(1, result.getError().code);
+}
+
+TEST_F(TwoCandidatesRule_SeekBackTest, ErrorCase3) {
+    std::string s = "aa+;;";
+
+    auto result = analyzer->analyze(s);
+
+    EXPECT_FALSE(result.hasValue());
+    EXPECT_EQ(1, result.getError().code);
+}
+
 }
