@@ -47,7 +47,7 @@ namespace asuka1975 {
 
     template <class TItem, class TOutput, class TError>
     inline ReadStatus Rule<TItem, TOutput, TError>::readLastInternal(const TItem& item) {
-        return read(item);
+        return readInternal(item);
     }
 }
 

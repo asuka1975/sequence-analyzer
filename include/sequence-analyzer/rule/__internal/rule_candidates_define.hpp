@@ -23,6 +23,7 @@ namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     inline ReadStatus RuleCandidates<TItem, TOutput, TError>::readInternal(const TItem& item) {
         history.push_back(item);
+        seekBackCount++;
         std::size_t i = 0;
         for(auto& candidate : candidates) {
             if(finishOrder[i] != 0) {
@@ -78,6 +79,7 @@ namespace asuka1975 {
     template <class TItem, class TOutput, class TError>
     inline ReadStatus RuleCandidates<TItem, TOutput, TError>::readLastInternal(const TItem& item) {
         history.push_back(item);
+        seekBackCount++;
 
         std::size_t i = 0;
 
@@ -95,6 +97,8 @@ namespace asuka1975 {
                 finishOrder[i] = -1;
                 finishCount++;
             }
+
+            i++;
         }
 
         if(finishCount == finishOrder.size()) {
